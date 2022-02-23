@@ -124,10 +124,6 @@ public class HttpServer {
                 e.printStackTrace();
             }
             return null;
-        }else if(uri.contains("css")){
-            return computeCSSResponse(outStream);
-        }else if(uri.contains("js")){
-            return computeJSResponse(outStream);
         }
         return null;
     }
@@ -155,36 +151,7 @@ public class HttpServer {
         }
         return content;
     }
-    public String computeJSResponse(OutputStream out){
-        String content = JS_MESSAGE;
-        File file = new File("src/main/resources/public/index.html");
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(file));
-            String line;
-            while((line =  br.readLine()) != null) content += line + "\n";
-            br.close();
-            out.write(content.getBytes());
-        } catch (IOException e) {
-            System.err.format("FileNotFoundException %s%n", e);
-            default404HTMLResponse(out);
-        }
-        return content;
-    }
-    public String computeCSSResponse(OutputStream out){
-        String content = CSS_MESSAGE;
-        File file = new File("src/main/resources/public/index.html");
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(file));
-            String line;
-            while((line =  br.readLine()) != null) content += line + "\n";
-            br.close();
-            out.write(content.getBytes());
-        } catch (IOException e) {
-            System.err.format("FileNotFoundException %s%n", e);
-            default404HTMLResponse(out);
-        }
-        return content;
-    }
+
     private void default404HTMLResponse(OutputStream out){
         String outputline = HTTP_MESSAGE_NOT_FOUND;
         outputline +=     "<!DOCTYPE html>"
@@ -211,7 +178,7 @@ public class HttpServer {
         if (System.getenv("PORT") != null) {
             return Integer.parseInt(System.getenv("PORT"));
         }
-        return 35000; //returns default port if heroku-port isn't set (i.e. on localhost)
+        return 35000;
     }
 
 
