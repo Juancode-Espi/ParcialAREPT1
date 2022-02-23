@@ -129,7 +129,8 @@ public class HttpServer {
     }
 
     public static String computeJSONResponse(String country) throws IOException{
-        String jsonText = HTTP_MESSAGE.replaceFirst("text", "application").replaceFirst("html", "json"); int cp;
+        String jsonText = HTTP_MESSAGE.replaceFirst("text", "application").replaceFirst("html", "json");
+        int cp;
         InputStream is = new URL(QUERY.replaceFirst("country", country)).openStream();
         BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
         while ((cp = rd.read()) != -1) jsonText += (char) cp;
