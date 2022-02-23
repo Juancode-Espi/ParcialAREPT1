@@ -29,7 +29,7 @@ public class HttpServer {
     private static final String HTTP_MESSAGE_NOT_FOUND = "HTTP/1.1 404 Not Found\n"
             + "Content-Type: text/html\r\n"
             + "\r\n";
-    private static final String WHEATER_QUERY = "https://api.openweathermap.org/data/2.5/weather?q=country&appid=1dc647740ce39a8ad83463a91a3450c8";
+    private static final String QUERY = "https://api.openweathermap.org/data/2.5/weather?q=country&appid=1dc647740ce39a8ad83463a91a3450c8";
 
     private static final HttpServer _instance = new HttpServer();
 
@@ -120,7 +120,7 @@ public class HttpServer {
             try {
                 return computeJSONResponse(country);
             } catch (IOException e) {
-                // TODO Auto-generated catch block
+
                 e.printStackTrace();
             }
             return null;
@@ -134,7 +134,7 @@ public class HttpServer {
 
     public static String computeJSONResponse(String country) throws IOException{
         String jsonText = HTTP_MESSAGE.replaceFirst("text", "application").replaceFirst("html", "json"); int cp;
-        InputStream is = new URL(WHEATER_QUERY.replaceFirst("country", country)).openStream();
+        InputStream is = new URL(QUERY.replaceFirst("country", country)).openStream();
         BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
         while ((cp = rd.read()) != -1) jsonText += (char) cp;
         return jsonText;
@@ -206,51 +206,15 @@ public class HttpServer {
     }
 
 
-    public String computeDefaultResponse(){
-        String outputLine =
-                "HTTP/1.1 200 OK\n"
-                        + "Content-Type: text/html\r\n"
-                        + "\r\n"
-                        + "<!DOCTYPE html>"
-                        + "<html>"
-                        + "<head>"
-                        + "<meta charset=\"UTF-8\">"
-                        + "<title>Title of the document</title>\n"
-                        + "</head>"
-                        + "<body>"
-                        + "My Web Site"
-                        + "</body>"
-                        + "</html>";
-        return outputLine;
-    }
+
     static int getPort() {
         if (System.getenv("PORT") != null) {
             return Integer.parseInt(System.getenv("PORT"));
         }
         return 35000; //returns default port if heroku-port isn't set (i.e. on localhost)
     }
-    private static String readAll(Reader rd) throws IOException {
-        StringBuilder sb = new StringBuilder();
-        int cp;
-        while ((cp = rd.read()) != -1) {
-            sb.append((char) cp);
-        }
-        return sb.toString();
-    }
 
 
-
-    public static JSONObject readJsonFromUrl(String city) throws IOException, JSONException {
-        InputStream is = new URL(city).openStream();
-        try {
-            BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
-            String jsonText = readAll(rd);
-            JSONObject json = new JSONObject(jsonText);
-            return json;
-        } finally {
-            is.close();
-        }
-    }
     public static void main(String[] args) throws IOException {
         HttpServer.getInstance().connect();
     }
